@@ -70,7 +70,9 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null)
+                squares: Array(9).fill(null),
+                rowPosition: Number(null),
+                colPosition: Number(null),
             }],
             xIsNext: true,
             stepNumber: 0,
@@ -81,6 +83,10 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1)
         const current = history[history.length - 1];
 
+        const cur_row_pos = this.getRowPosition(i + 1)
+        const cur_col_pos = this.getColPosition(i + 1)
+        
+
         const squares = current.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
@@ -89,10 +95,34 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([{
                 squares: squares,
+                rowPosition: cur_row_pos,
+                colPosition: cur_col_pos
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length
         });
+    }
+
+    getRowPosition(i) {
+        if (i <= 3) {
+            return 1;
+        } else if ( i <= 6) {
+            return 2;
+        }
+        return 3;       
+    }
+
+    getColPosition(i) {
+        const firstCol = [ 1, 4, 7];
+        const secondCol = [ 2, 5, 8];
+
+        if (firstCol.includes(i)) {
+            return 1;
+        } else if (secondCol.includes(i)) {
+            return 2;
+        } else {
+            return 3;
+        };
     }
 
     jumpTo(step) {
@@ -109,7 +139,7 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
             const desc = move ?
-                'Go to move #' + move :
+                `Go to move # ${move}, the last move was in Row-${step.rowPosition} x Col-${step.colPosition};`:
                 'Go to move start';
             return (
                 <li key={move}>
