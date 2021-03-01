@@ -76,6 +76,7 @@ class Game extends React.Component {
             }],
             xIsNext: true,
             stepNumber: 0,
+            strongLine: Number(null)
         }
     }
 
@@ -96,10 +97,11 @@ class Game extends React.Component {
             history: history.concat([{
                 squares: squares,
                 rowPosition: cur_row_pos,
-                colPosition: cur_col_pos
+                colPosition: cur_col_pos,
             }]),
             xIsNext: !this.state.xIsNext,
-            stepNumber: history.length
+            stepNumber: history.length,
+            strongLine: history.length
         });
     }
 
@@ -129,7 +131,9 @@ class Game extends React.Component {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
-        })
+            strongLine: step 
+        });
+        
     }
 
     render() {
@@ -137,13 +141,18 @@ class Game extends React.Component {
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
-        const moves = history.map((step, move) => {
+        
+
+        const moves = history.map((step, move, arr) => {
             const desc = move ?
                 `Go to move # ${move}, the last move was in Row-${step.rowPosition} x Col-${step.colPosition};`:
                 'Go to move start';
+
+            
+
             return (
-                <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                <li key={move}  >
+                    <button className={this.state.strongLine === move? 'currentMove' : ''} onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             );
         });
