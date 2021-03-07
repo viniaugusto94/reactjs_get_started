@@ -42,24 +42,31 @@ class Board extends React.Component {
         );
     }
 
+    renderRow(row) {
+        const col = 3;
+        let cols = [];
+
+        for(let i = 0; i < col; i++) {
+            cols.push(i);
+        };
+
+        return (
+            <div className="board-row">
+                {cols.map(x => this.renderSquare(row + x))}
+            </div>);
+    }
+
     render() {
+        const squares = 9;
+        let rows = [];
+        
+        for (let i = 0; i < squares; i += 3) {
+            rows.push(i)
+        }
+
         return (
             <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {rows.map(row => this.renderRow(row))}
             </div>
         );
     }
@@ -134,7 +141,7 @@ class Game extends React.Component {
             strongLine: step 
         });
         
-    }
+    } 
 
     render() {
         const history = this.state.history;
